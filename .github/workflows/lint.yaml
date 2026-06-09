@@ -1,0 +1,36 @@
+name: Lint & Build Tester
+
+on:
+  push:
+    branches: "main"
+  pull_request:
+    branches:  "main"
+
+jobs:
+  client-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install Client Dependencies
+        run: |
+          cd client
+          npm ci
+
+      - name: Lint Code
+        run: |
+          cd client
+          npm run lint
+
+      - name: Build Client
+        run: |
+          cd client
+          npm run build
