@@ -17,20 +17,6 @@ export default function GameScreen({ playerName, vCoins, settings, inventory, on
   
   const timerRef = useRef(null);
 
-  useEffect(() => {
-    if (settings.mode !== 'chain' && !botWord) {
-      fetchMiniGameWord();
-    }
-  }, []);
-
-  useEffect(() => {
-    // Chỉ bắt đầu đếm giờ nếu Bot đã phản đòn, HOẶC người chơi đã bắt đầu gõ từ đầu tiên
-    if (botWord || hasStarted) {
-      startTimer();
-    }
-    return () => clearInterval(timerRef.current);
-  }, [botWord, hasStarted]);
-
   const fetchMiniGameWord = async () => {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
@@ -70,6 +56,19 @@ export default function GameScreen({ playerName, vCoins, settings, inventory, on
       });
     }, 1000);
   };
+
+  useEffect(() => {
+    if (settings.mode !== 'chain' && !botWord) {
+      fetchMiniGameWord();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (botWord || hasStarted) {
+      startTimer();
+    }
+    return () => clearInterval(timerRef.current);
+  }, [botWord, hasStarted]);
 
   const [isGameOver, setIsGameOver] = useState(false);
   const [gameOverMsg, setGameOverMsg] = useState('');
@@ -164,14 +163,13 @@ export default function GameScreen({ playerName, vCoins, settings, inventory, on
   const handleSubmit = async () => {
     if (!currentWord.trim()) return;
 
-    // Lô-gic xử lý cho chế độ Minigame
     if (settings.mode !== 'chain') {
       if (currentWord.trim().toLowerCase() === secretWord.toLowerCase()) {
         SoundManager.success();
-        setScore(prev => prev + (settings.timeLimit - timeLeft + 10) * 5); // Tính điểm nhanh chậm
+        setScore(prev => prev + (settings.timeLimit - timeLeft + 10) * 5);
         setHistory(prev => [...prev, secretWord]);
         onAddFlashcard(secretWord, botDef);
-        setErrorMsg(''); // Xóa dòng chữ đỏ báo lỗi
+        setErrorMsg('');
         fetchMiniGameWord();
       } else {
         const newWrong = wrongCount + 1;
@@ -192,7 +190,6 @@ export default function GameScreen({ playerName, vCoins, settings, inventory, on
     }
 
     try {
-      // Gọi API Backend (Giả lập fetch tới /api/game/play) cho nối từ
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
       const response = await fetch(`${apiUrl}/api/game/play`, {
         method: 'POST',
@@ -225,9 +222,8 @@ export default function GameScreen({ playerName, vCoins, settings, inventory, on
         return;
       }
 
-      // Xử lý Hợp lệ
       SoundManager.success();
-      setWrongCount(0); // Reset số lần sai khi trả lời đúng
+      setWrongCount(0);
       setScore(prev => prev + data.score);
       setHistory(data.updatedUsedWords);
       
@@ -254,7 +250,7 @@ export default function GameScreen({ playerName, vCoins, settings, inventory, on
   const showError = (msg) => {
     setErrorMsg(msg);
     setIsError(true);
-    setTimeout(() => setIsError(false), 500); // Tắt hiệu ứng đỏ
+    setTimeout(() => setIsError(false), 500);
   };
 
   return (
@@ -262,83 +258,82 @@ export default function GameScreen({ playerName, vCoins, settings, inventory, on
       <div className="game-container glass-panel">
         <div className="game-main">
           <div className="game-header">
-        <div className="player-info">
-          <span className={inventory.vip ? 'vip-avatar' : ''}>👤</span> {playerName} | Điểm: <span>{score}</span> | 💰 {vCoins}
-        </div>
-        <div className={`timer ${timeLeft <= 5 ? 'danger' : ''}`}>⏳ {timeLeft}s</div>
-        <div className="header-actions">
-          <button className="nav-btn" onClick={() => { SoundManager.typeKey(); onGoLobby(); }}>⬅ Sảnh Chờ</button>
-          <button className="surrender-btn" onClick={handleSurrender}>Bỏ cuộc</button>
-        </div>
-      </div>
-
-      <div className="battle-arena">
-        <div className="bot-box">
-          <div className="bot-avatar">🤖 AI Boss</div>
-          {botWord ? (
-            <>
-              <div className="bot-word">{botWord.toUpperCase()}</div>
-              <div className="bot-def">
-                {typeof botDef === 'string' ? botDef : (
-                  <>
-                    <div style={{ color: 'var(--muted-text)', fontSize: '1.1rem', fontStyle: 'italic', marginBottom: '8px' }}>{botDef.ipa}</div>
-                    <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>{botDef.en}</div>
-                    <div style={{ color: 'var(--accent-color)' }}>{botDef.vi}</div>
-                  </>
-                )}
-              </div>
-              <div className="rule-hint">
-                {settings.mode === 'chain' 
-                  ? <span>Bạn phải tìm từ bắt đầu bằng chữ: <strong>{botWord.slice(-1).toUpperCase()}</strong></span>
-                  : settings.mode === 'scramble'
-                  ? <span>Sắp xếp lại các chữ cái trên để tạo thành từ có nghĩa!</span>
-                  : <span>Điền các chữ cái bị giấu '_' để hoàn thành từ!</span>
-                }
-              </div>
-            </>
-          ) : (
-            <div className="rule-hint" style={{ fontSize: '1.3rem', marginTop: '30px', color: 'var(--primary-color)' }}>
-              Hãy nhập một từ tiếng Anh bất kỳ để khai chiến! 🚀
+            <div className="player-info">
+              <span className={inventory.vip ? 'vip-avatar' : ''}>👤</span> {playerName} | Điểm: <span>{score}</span> | 💰 {vCoins}
             </div>
-          )}
+            <div className={`timer ${timeLeft <= 5 ? 'danger' : ''}`}>⏳ {timeLeft}s</div>
+            <div className="header-actions">
+              <button className="nav-btn" onClick={() => { SoundManager.typeKey(); onGoLobby(); }}>⬅ Sảnh Chờ</button>
+              <button className="surrender-btn" onClick={handleSurrender}>Bỏ cuộc</button>
+            </div>
+          </div>
+
+          <div className="battle-arena">
+            <div className="bot-box">
+              <div className="bot-avatar">🤖 AI Boss</div>
+              {botWord ? (
+                <>
+                  <div className="bot-word">{botWord.toUpperCase()}</div>
+                  <div className="bot-def">
+                    {typeof botDef === 'string' ? botDef : (
+                      <>
+                        <div style={{ color: 'var(--muted-text)', fontSize: '1.1rem', fontStyle: 'italic', marginBottom: '8px' }}>{botDef.ipa}</div>
+                        <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>{botDef.en}</div>
+                        <div style={{ color: 'var(--accent-color)' }}>{botDef.vi}</div>
+                      </>
+                    )}
+                  </div>
+                  <div className="rule-hint">
+                    {settings.mode === 'chain' 
+                      ? <span>Bạn phải tìm từ bắt đầu bằng chữ: <strong>{botWord.slice(-1).toUpperCase()}</strong></span>
+                      : settings.mode === 'scramble'
+                      ? <span>Sắp xếp lại các chữ cái trên để tạo thành từ có nghĩa!</span>
+                      : <span>Điền các chữ cái bị giấu &apos;_&apos; để hoàn thành từ!</span>
+                    }
+                  </div>
+                </>
+              ) : (
+                <div className="rule-hint" style={{ fontSize: '1.3rem', marginTop: '30px', color: 'var(--primary-color)' }}>
+                  Hãy nhập một từ tiếng Anh bất kỳ để khai chiến! 🚀
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="input-arena">
+            <input 
+              type="text" 
+              className={`word-input ${isError ? 'input-error' : ''}`}
+              placeholder={
+                settings.mode === 'chain'
+                  ? (botWord ? `Nhập từ bắt đầu bằng '${botWord.slice(-1).toUpperCase()}'...` : 'Nhập từ tiếng Anh đầu tiên...')
+                  : 'Nhập đáp án của bạn...'
+              }
+              value={currentWord}
+              onChange={(e) => {
+                if (!hasStarted && !botWord) setHasStarted(true);
+                setCurrentWord(e.target.value);
+              }}
+              onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
+              autoFocus
+            />
+            <button className="primary-btn" onClick={handleSubmit}>Bắn 🚀</button>
+          </div>
+
+          <div className="items-toolbar" style={{ display: 'flex', justifyContent: 'center', marginTop: '15px' }}>
+            <button 
+              className="choice-btn" 
+              onClick={handleUseHint}
+              disabled={inventory.hint <= 0 || !botWord}
+              style={{ width: 'auto', padding: '8px 20px', fontSize: '0.95rem' }}
+            >
+              🔍 Dùng Gợi Ý ({inventory.hint})
+            </button>
+          </div>
+          
+          {errorMsg && <div className="error-text">{errorMsg}</div>}
         </div>
-      </div>
 
-      <div className="input-arena">
-        <input 
-          type="text" 
-          className={`word-input ${isError ? 'input-error' : ''}`}
-          placeholder={
-            settings.mode === 'chain'
-              ? (botWord ? `Nhập từ bắt đầu bằng '${botWord.slice(-1).toUpperCase()}'...` : 'Nhập từ tiếng Anh đầu tiên...')
-              : 'Nhập đáp án của bạn...'
-          }
-          value={currentWord}
-          onChange={(e) => {
-            if (!hasStarted && !botWord) setHasStarted(true);
-            setCurrentWord(e.target.value);
-          }}
-          onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-          autoFocus
-        />
-        <button className="primary-btn" onClick={handleSubmit}>Bắn 🚀</button>
-      </div>
-
-      <div className="items-toolbar" style={{ display: 'flex', justifyContent: 'center', marginTop: '15px' }}>
-        <button 
-          className="choice-btn" 
-          onClick={handleUseHint}
-          disabled={inventory.hint <= 0 || !botWord}
-          style={{ width: 'auto', padding: '8px 20px', fontSize: '0.95rem' }}
-        >
-          🔍 Dùng Gợi Ý ({inventory.hint})
-        </button>
-      </div>
-      
-        {errorMsg && <div className="error-text">{errorMsg}</div>}
-        </div>
-
-        {/* CỘT PHẢI: LỊCH SỬ TRẬN ĐẤU (DESKTOP) */}
         <div className="game-sidebar">
           <h3>📜 Nhật ký Trận đấu</h3>
           <div className="history-list">
@@ -364,7 +359,6 @@ export default function GameScreen({ playerName, vCoins, settings, inventory, on
         </div>
       </div>
 
-      {/* CUSTOM OVERLAY MODAL CHỐNG PHÈN */}
       {isGameOver && (
         <div className="modal-overlay">
           <div className="modal-content glass-panel bounce-in">
