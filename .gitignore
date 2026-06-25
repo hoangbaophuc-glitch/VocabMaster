@@ -31,6 +31,8 @@ build/Release
 node_modules/
 client/node_modules/
 server/node_modules/
+.firebase/
+client/.firebase/
 
 # Optional npm cache directory
 .npm
