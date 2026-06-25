@@ -1,0 +1,24 @@
+---
+id: 68cc6701-29f1-431a-926f-24fdc7b6943a
+---
+flowchart TD
+    subgraph ClientSide ["Client"]
+        Browser["ReactJS + Vite"]
+    end
+
+    subgraph FirebaseServices [" Firebase Cloud Services"]
+        FirebaseAuth["Firebase Authentication\n(Xác thực tài khoản)"]
+        Firestore["Cloud Firestore DB\n(Dữ liệu Users, Inventory, Flashcards)"]
+    end
+
+    subgraph ServerSide [" Server Side (Backend)"]
+        Express["Node.js / Express Server\n(API Gateway & Controllers)"]
+        CppEngine["C++ Engine Core\n(Trie Tree, Bot AI Logic)"]
+        
+        Express <-->|"Thực thi & Giao tiếp (C++ Process)"| CppEngine
+    end
+
+    %% Tương tác từ Client
+    Browser -- "1. Đăng ký / Đăng nhập" --> FirebaseAuth
+    Browser <-->|"2. Truy xuất & Cập nhật Dữ liệu"| Firestore
+    Browser <-->|"3. Gọi REST API (game logic)"| Express
