@@ -256,7 +256,7 @@ export default function GameScreen({ playerName, vCoins, settings, inventory, on
 
   return (
     <div className="game-wrapper">
-      <div className="game-container glass-panel">
+      <div className="game-container">
         <div className="game-main">
           <div className="game-header">
             <div className="player-info">
@@ -264,14 +264,13 @@ export default function GameScreen({ playerName, vCoins, settings, inventory, on
             </div>
             <div className={`timer ${timeLeft <= 5 ? 'danger' : ''}`}>⏳ {timeLeft}s</div>
             <div className="header-actions">
-              <button className="nav-btn" onClick={() => { SoundManager.typeKey(); onGoLobby(); }}>⬅ Sảnh Chờ</button>
+              <button className="nav-btn" onClick={() => { SoundManager.typeKey(); onGoLobby(); }}>Sảnh Chờ</button>
               <button className="surrender-btn" onClick={handleSurrender}>Bỏ cuộc</button>
             </div>
           </div>
 
           <div className="battle-arena">
             <div className="bot-box">
-              <div className="bot-avatar">🤖 AI Boss</div>
               {botWord ? (
                 <>
                   <div className="bot-word">{botWord.toUpperCase()}</div>
@@ -302,14 +301,20 @@ export default function GameScreen({ playerName, vCoins, settings, inventory, on
           </div>
 
           <div className="input-arena">
+            <div 
+              className="terminal-input-display"
+              onClick={() => document.getElementById('game-word-input')?.focus()}
+            >
+              <span className={`terminal-text ${isError ? 'input-error' : ''}`}>
+                {currentWord.toUpperCase()}
+              </span>
+              <span className="terminal-block"></span>
+            </div>
+            
             <input 
+              id="game-word-input"
               type="text" 
-              className={`word-input ${isError ? 'input-error' : ''}`}
-              placeholder={
-                settings.mode === 'chain'
-                  ? (botWord ? `Nhập từ bắt đầu bằng '${botWord.slice(-1).toUpperCase()}'...` : 'Nhập từ tiếng Anh đầu tiên...')
-                  : 'Nhập đáp án của bạn...'
-              }
+              className="hidden-input"
               value={currentWord}
               onChange={(e) => {
                 if (!hasStarted && !botWord) setHasStarted(true);
@@ -317,6 +322,8 @@ export default function GameScreen({ playerName, vCoins, settings, inventory, on
               }}
               onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
               autoFocus
+              autoComplete="off"
+              spellCheck="false"
             />
             <button className="primary-btn" onClick={handleSubmit}>Bắn 🚀</button>
           </div>
