@@ -29,10 +29,10 @@ export default function StoreScreen({ vCoins, inventory, onBuy, onBack }) {
   };
 
   return (
-    <div className="store-container glass-panel">
+    <div className="store-container">
       <div className="store-header">
-        <button className="back-btn" onClick={onBack}>⬅ Trở về</button>
-        <h2>Cửa Hàng Vật Phẩm 🛒</h2>
+        <button className="back-btn" onClick={onBack}>Trở về</button>
+        <h2 className="store-title">CỬA HÀNG VẬT PHẨM</h2>
         <div className="coin-display">💰 {vCoins} V-Coins</div>
       </div>
 

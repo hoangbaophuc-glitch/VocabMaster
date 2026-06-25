@@ -12,22 +12,19 @@
 
 .game-container {
   width: 100%;
-  max-width: 100%;
+  max-width: 1200px;
   height: 100%;
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-  gap: 30px;
-  padding: 30px;
-  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
   border: none;
-  box-shadow: none;
+  background: transparent;
 }
 
 .game-main {
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  height: 100%;
+  flex: 1;
   min-height: 0; 
 }
 
@@ -35,24 +32,23 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-  padding-bottom: 20px;
-  background: var(--panel-bg);
-  padding: 15px 25px;
-  border-radius: 16px;
+  border-bottom: 1px solid var(--glass-border);
+  padding-bottom: 15px;
+  margin-bottom: 20px;
 }
 
 .player-info {
   font-size: 1.2rem;
   font-weight: bold;
+  color: var(--text-color);
 }
 
 .vip-avatar {
   display: inline-block;
   padding: 4px;
-  background: linear-gradient(45deg, #fbbf24, #f59e0b);
+  background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
   border-radius: 50%;
-  box-shadow: 0 0 15px rgba(245, 158, 11, 0.6);
+  box-shadow: 0 0 15px var(--primary-color);
   animation: pulse-vip 2s infinite;
 }
 
@@ -75,75 +71,59 @@
   background: var(--timer-bg);
   padding: 5px 20px;
   border-radius: 50px;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid var(--glass-border);
 }
 
 .timer.danger {
-  color: #ff6b6b;
+  color: var(--secondary-color);
   text-shadow: none;
   animation: pulse 0.8s infinite;
-  border-color: rgba(255, 107, 107, 0.3);
-  background: rgba(255, 107, 107, 0.1);
 }
 
 .header-actions {
   display: flex;
   gap: 12px;
+  min-width: 250px;
 }
 
-.nav-btn {
-  background: rgba(0, 242, 254, 0.1);
-  border: 1px solid rgba(0, 242, 254, 0.3);
-  color: #00f2fe;
-  padding: 8px 18px;
-  border-radius: 50px;
-  font-weight: 600;
+.nav-btn, .surrender-btn {
+  flex: 1;
+  background: var(--glass-bg);
+  color: var(--text-color);
+  padding: 12px 20px;
+  border: none;
+  border-radius: 15px;
+  font-weight: 700;
+  font-size: 1.1rem;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.2s ease;
+  text-align: center;
 }
 
-.nav-btn:hover {
-  background: #00f2fe;
-  color: #000;
-  box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+.nav-btn:hover, .surrender-btn:hover {
+  transform: translateY(-2px);
+  background: var(--panel-bg);
 }
 
-.surrender-btn {
-  background: rgba(255, 71, 87, 0.1);
-  border: 1px solid rgba(255, 71, 87, 0.3);
-  color: #ff4757;
-  padding: 8px 18px;
-  border-radius: 50px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.surrender-btn:hover {
-  background: #ff4757;
-  color: white;
-  box-shadow: 0 0 15px rgba(255, 71, 87, 0.4);
-}
-
+/* BATTLE ARENA (Bot's word) */
 .battle-arena {
   text-align: center;
-  padding: 0;
   flex: 1; 
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end; /* Push down to center with input */
   align-items: center;
-  overflow-y: auto; 
+  padding-bottom: 20px;
 }
 
-.bot-avatar {
-  font-size: 3.5rem;
-  margin-bottom: 15px;
-  filter: drop-shadow(0 0 10px rgba(0,0,0,0.5));
+.bot-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .bot-word {
-  font-size: clamp(2rem, 5vw, 4rem);
+  font-size: clamp(3rem, 6vw, 5rem);
   font-weight: 900;
   letter-spacing: 4px;
   color: var(--text-color);
@@ -156,7 +136,7 @@
 .bot-def {
   font-size: 1.3rem;
   color: var(--muted-text);
-  margin-bottom: 25px;
+  margin-bottom: 20px;
   font-style: italic;
 }
 
@@ -167,79 +147,119 @@
   padding: 10px 20px;
   border-radius: 12px;
   display: inline-block;
-  border: 1px solid var(--hint-bg);
 }
 
+/* INPUT ARENA (User's input) */
 .input-arena {
   display: flex;
-  gap: 15px;
-  background: var(--panel-bg);
-  padding: 20px;
-  border-radius: 20px;
-  border: 1px solid rgba(255,255,255,0.05);
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  justify-content: flex-start;
+  flex: 1; /* Match battle-arena to center exactly */
 }
 
-.word-input {
-  flex: 1;
-  padding: 20px 25px;
-  border-radius: 16px;
-  border: 2px solid var(--glass-border);
-  background: var(--bg-color);
+.hidden-input {
+  opacity: 0;
+  position: absolute;
+  z-index: -1;
+  width: 0;
+  height: 0;
+}
+
+.terminal-input-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: text;
+  min-height: 80px;
+  width: 100%;
+}
+
+.terminal-text {
   color: var(--text-color);
-  font-size: 1.5rem;
-  font-weight: 600;
-  outline: none;
-  transition: all 0.3s;
-  letter-spacing: 2px;
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 700;
+  letter-spacing: 4px;
   text-transform: uppercase;
 }
 
-.word-input:focus {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
-  background: var(--bg-color);
+.terminal-block {
+  display: inline-block;
+  width: clamp(1.5rem, 3vw, 2.5rem);
+  height: clamp(0.3rem, 0.6vw, 0.5rem);
+  background-color: var(--text-color);
+  animation: blink 1s step-end infinite;
+  align-self: flex-end;
+  margin-bottom: 10px;
 }
 
-.word-input::placeholder {
-  color: var(--muted-text);
-  text-transform: none;
-  font-weight: normal;
-  letter-spacing: normal;
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 .input-error {
-  border-color: #ff4757 !important;
-  box-shadow: 0 0 20px rgba(255, 71, 87, 0.3) !important;
   animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+  color: var(--secondary-color);
 }
 
 .error-text {
-  color: #ff4757;
-  font-size: 1rem;
+  color: var(--secondary-color);
+  font-size: 1.1rem;
   text-align: center;
-  margin-top: -10px;
+  margin-top: 10px;
   font-weight: 600;
 }
 
-/* SIDEBAR: NHẬT KÝ TRẬN ĐẤU */
-.game-sidebar {
+.items-toolbar {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+/* Helper Button Style */
+.choice-btn {
+  background: var(--glass-bg);
+  border: 1.5px solid var(--glass-border);
+  color: var(--text-color);
+  padding: 12px 15px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.choice-btn:hover:not(:disabled) {
   background: var(--panel-bg);
+  transform: translateY(-2px);
+}
+
+.choice-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Lịch sử trận đấu */
+.game-sidebar {
+  background: var(--glass-bg);
   border-radius: 20px;
   border: 1px solid var(--glass-border);
   padding: 20px;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  min-height: 0; /* Ép Sidebar không được phép phình to đẩy khung */
+  height: 200px;
+  min-height: 200px;
+  margin-top: 20px;
 }
 
 .game-sidebar h3 {
   color: var(--text-color);
   font-size: 1.2rem;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   text-align: center;
-  padding-bottom: 15px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
 .history-list {
@@ -247,47 +267,47 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   padding-right: 5px;
 }
 
-/* Custom Scrollbar */
 .history-list::-webkit-scrollbar {
   width: 6px;
 }
 .history-list::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.2);
+  background: var(--glass-border);
   border-radius: 10px;
 }
 
 .empty-history {
   color: var(--muted-text);
   text-align: center;
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-style: italic;
-  margin-top: 20px;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .history-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 15px;
+  padding: 10px 15px;
   border-radius: 12px;
-  background: rgba(255,255,255,0.03);
+  background: var(--panel-bg);
   border-left: 4px solid transparent;
 }
 
 .history-item.player {
-  border-left-color: #00f2fe;
+  border-left-color: var(--primary-color);
 }
 
 .history-item.bot {
-  border-left-color: #ff4757;
+  border-left-color: var(--secondary-color);
 }
 
 .history-actor {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: var(--muted-text);
 }
 
@@ -298,11 +318,11 @@
   letter-spacing: 1px;
 }
 
-
+/* Modals */
 .modal-overlay {
   position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(2, 6, 23, 0.9);
+  background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
@@ -311,11 +331,11 @@
 }
 
 .modal-content {
-  background: linear-gradient(145deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95));
+  background: var(--panel-bg);
   text-align: center;
   padding: 50px;
   border-radius: 32px;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid var(--glass-border);
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
   max-width: 500px;
   width: 90%;
@@ -363,92 +383,28 @@
   40%, 60% { transform: translate3d(8px, 0, 0); }
 }
 
-/* RESPONSIVE DESIGN CHO ĐIỆN THOẠI & TABLET */
+/* RESPONSIVE DESIGN */
 @media (max-width: 900px) {
   .game-wrapper {
-    position: relative; /* Trả lại thanh cuộn cho mobile */
     height: auto;
     min-height: 100vh;
-  }
-
-  .game-container {
-    grid-template-columns: 1fr; /* Gộp thành 1 cột */
-    padding: 15px;
-    gap: 15px;
-  }
-
-  .game-sidebar {
-    height: 400px; /* Đặt chiều cao cố định khi bị đẩy xuống dưới cùng */
+    position: relative;
   }
   
   .game-header {
     flex-direction: column;
     gap: 15px;
-    padding: 15px;
-  }
-  
-  .player-info {
-    font-size: 1rem;
-    text-align: center;
-  }
-  
-  .timer {
-    font-size: 1.5rem;
   }
   
   .header-actions {
     width: 100%;
-    justify-content: center;
-    flex-wrap: wrap;
   }
-  
-  .battle-arena {
-    height: auto; 
-    min-height: 300px;
-    padding: 20px 0;
-  }
-  
-  .bot-avatar {
+
+  .bot-word, .word-input {
     font-size: 2.5rem;
   }
-  
-  .bot-word {
-    font-size: 2.5rem;
-    letter-spacing: 4px;
-  }
-  
-  .bot-def {
-    font-size: 1.1rem;
-    padding: 0 10px;
-  }
-  
-  .rule-hint {
-    font-size: 1rem;
-  }
-  
-  .input-arena {
-    flex-direction: column;
-    padding: 15px;
-  }
-  
-  .word-input {
-    font-size: 1.2rem;
-    padding: 15px;
-  }
-  
-  .primary-btn {
-    width: 100%;
-  }
 
-  .modal-content {
-    padding: 30px 20px;
-  }
-
-  .modal-content h2 {
-    font-size: 2rem;
-  }
-
-  .modal-actions {
-    flex-direction: column;
+  .game-sidebar {
+    height: 300px;
   }
 }

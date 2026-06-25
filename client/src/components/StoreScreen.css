@@ -1,6 +1,7 @@
 .store-container {
   width: 100%;
-  max-width: 800px;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .store-header {
@@ -8,51 +9,66 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--glass-border);
   padding-bottom: 15px;
   gap: 20px;
   flex-wrap: wrap;
 }
 
+.store-title {
+  color: var(--primary-color);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin: 0;
+  text-align: center;
+  flex: 1;
+}
+
 .coin-display {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #fbbf24;
+  color: var(--primary-color);
 }
 
 .back-btn {
-  background: transparent;
-  border: 1px solid #00f2fe;
-  color: #00f2fe;
-  padding: 8px 15px;
-  border-radius: 20px;
+  background: var(--glass-bg);
+  color: var(--text-color);
+  border: none;
+  border-radius: 15px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: 10px 25px;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.2s ease;
 }
 
 .back-btn:hover {
-  background: #00f2fe;
-  color: #000;
+  background: var(--panel-bg);
+  transform: translateY(-2px);
 }
 
 .store-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
 
 .store-item {
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   border-radius: 16px;
   padding: 20px;
   text-align: center;
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition: transform 0.3s;
 }
 
 .store-item:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 242, 254, 0.2);
+}
+
+.store-item h3 {
+  color: var(--text-color);
 }
 
 .item-icon {
@@ -62,14 +78,14 @@
 
 .store-item p {
   font-size: 0.9rem;
-  color: #cbd5e1;
+  color: var(--muted-text);
   margin: 15px 0;
   height: 40px;
 }
 
 .buy-btn {
-  background: linear-gradient(to right, #fbbf24, #f59e0b);
-  color: #000;
+  background: var(--secondary-color);
+  color: #fff;
   font-weight: bold;
   border: none;
   padding: 10px 20px;
@@ -79,6 +95,13 @@
   transition: transform 0.2s;
 }
 
-.buy-btn:hover {
+.buy-btn:hover:not(:disabled) {
   transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+  .store-grid {
+    grid-template-columns: 1fr;
+  }
 }
