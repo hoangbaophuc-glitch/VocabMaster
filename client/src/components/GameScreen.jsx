@@ -294,14 +294,18 @@ export default function GameScreen({ playerName, vCoins, settings, inventory, on
             <div className="bot-box">
               {botWord ? (
                 <>
-                  <div className="bot-word">{botWord.toUpperCase()}</div>
-                  <div className="bot-def">
-                    {typeof botDef === 'string' ? botDef : (
-                      <>
-                        <div style={{ color: 'var(--muted-text)', fontSize: '1.1rem', fontStyle: 'italic', marginBottom: '8px' }}>{botDef.ipa}</div>
-                        <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>{botDef.en}</div>
-                        <div style={{ color: 'var(--accent-color)' }}>{botDef.vi}</div>
-                      </>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '20px', flexWrap: 'wrap', marginBottom: '15px' }}>
+                    <div className="bot-word" style={{ marginBottom: 0 }}>{botWord.toUpperCase()}</div>
+                    {botDef && (
+                      <div className="bot-def" style={{ marginBottom: 0, textAlign: 'left', display: 'flex', gap: '15px', alignItems: 'center' }}>
+                        {typeof botDef === 'string' ? botDef : (
+                          <>
+                            <span style={{ color: 'var(--muted-text)', fontSize: '1.1rem', fontStyle: 'italic' }}>{botDef.ipa}</span>
+                            <span style={{ fontWeight: 'bold' }}>{botDef.en}</span>
+                            <span style={{ color: 'var(--accent-color)' }}>{botDef.vi}</span>
+                          </>
+                        )}
+                      </div>
                     )}
                   </div>
                   <div className="rule-hint">
@@ -346,17 +350,13 @@ export default function GameScreen({ playerName, vCoins, settings, inventory, on
               autoComplete="off"
               spellCheck="false"
             />
-            <button className="primary-btn" onClick={handleSubmit}>Bắn</button>
-          </div>
-
-          <div className="items-toolbar" style={{ display: 'flex', justifyContent: 'center', marginTop: '15px' }}>
             <button 
-              className="choice-btn" 
+              className="primary-btn" 
               onClick={handleUseHint}
               disabled={inventory.hint <= 0 || !botWord}
-              style={{ width: 'auto', padding: '8px 20px', fontSize: '0.95rem' }}
+              style={inventory.hint <= 0 || !botWord ? { background: 'var(--muted-text)', cursor: 'not-allowed' } : {}}
             >
-              🔍 Dùng Gợi Ý ({inventory.hint})
+              Dùng Gợi Ý ({inventory.hint})
             </button>
           </div>
           
