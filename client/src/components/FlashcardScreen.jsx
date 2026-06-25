@@ -1,26 +1,45 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './FlashcardScreen.css';
 
 export default function FlashcardScreen({ flashcards, onBack }) {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredFlashcards = flashcards ? flashcards.filter(card => 
+    card.word.toLowerCase().includes(searchTerm.toLowerCase())
+  ) : [];
 
   return (
-    <div className="flashcard-container glass-panel">
+    <div className="flashcard-container">
       <div className="flashcard-header">
-        <button className="back-btn" onClick={onBack}>⬅ Trở về</button>
-        <h2>Thư viện Flashcard 📚</h2>
+        <button className="back-btn" onClick={onBack}>Trở về</button>
+        <h2 className="flashcard-title">THƯ VIỆN FLASHCARD</h2>
         <div style={{width: '80px'}}></div>
       </div>
 
       <p className="hint-text">Rê chuột vào thẻ để học nghĩa Tiếng Việt (Từ mới sẽ được Bot tự động lưu vào đây).</p>
 
+      <div className="search-bar-container">
+        <input 
+          type="text" 
+          className="search-bar" 
+          placeholder="Tìm kiếm từ vựng..." 
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </div>
+
       {(!flashcards || flashcards.length === 0) ? (
-        <div style={{ textAlign: 'center', padding: '50px', color: '#94a3b8' }}>
+        <div style={{ textAlign: 'center', padding: '50px', color: 'var(--muted-text)' }}>
           <h3>Thư viện trống rỗng!</h3>
           <p>Hãy vào game thi đấu, Bot sẽ tự động nhét những từ vựng bạn chưa biết vào đây.</p>
         </div>
+      ) : filteredFlashcards.length === 0 ? (
+        <div style={{ textAlign: 'center', padding: '50px', color: 'var(--muted-text)' }}>
+          <h3>Không tìm thấy từ "{searchTerm}"!</h3>
+        </div>
       ) : (
         <div className="flashcard-grid">
-          {flashcards.map(card => (
+          {filteredFlashcards.map(card => (
           <div key={card.id} className="flip-card">
             <div className="flip-card-inner">
               <div className="flip-card-front">

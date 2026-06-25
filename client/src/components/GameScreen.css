@@ -244,7 +244,7 @@
 
 /* Lịch sử trận đấu */
 .game-sidebar {
-  background: var(--panel-bg);
+  background: var(--glass-bg);
   border-radius: 20px;
   border: 1px solid var(--glass-border);
   padding: 20px;
@@ -294,7 +294,7 @@
   align-items: center;
   padding: 10px 15px;
   border-radius: 12px;
-  background: var(--glass-bg);
+  background: var(--panel-bg);
   border-left: 4px solid transparent;
 }
 

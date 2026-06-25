@@ -77,6 +77,27 @@ export default function GameScreen({ playerName, vCoins, settings, inventory, on
     return () => clearInterval(timerRef.current);
   }, [botWord, hasStarted]);
 
+  // AUTO-FOCUS KHI GÕ PHÍM
+  useEffect(() => {
+    const handleGlobalKeyDown = (e) => {
+      if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
+      if (e.ctrlKey || e.metaKey || e.altKey) return;
+      
+      if (e.key.length === 1 || e.key === 'Backspace') {
+        const input = document.getElementById('game-word-input');
+        if (input) input.focus();
+      } else if (e.key === 'Enter') {
+        const input = document.getElementById('game-word-input');
+        if (input) {
+          input.focus();
+        }
+      }
+    };
+    
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+  }, []);
+
   const [isGameOver, setIsGameOver] = useState(false);
   const [gameOverMsg, setGameOverMsg] = useState('');
 
@@ -293,8 +314,8 @@ export default function GameScreen({ playerName, vCoins, settings, inventory, on
                   </div>
                 </>
               ) : (
-                <div className="rule-hint" style={{ fontSize: '1.3rem', marginTop: '30px', color: 'var(--primary-color)' }}>
-                  Hãy nhập một từ tiếng Anh bất kỳ để khai chiến! 🚀
+                <div style={{ fontSize: '1.3rem', marginTop: '30px', color: 'var(--primary-color)', fontWeight: 'bold' }}>
+                  Hãy nhập một từ tiếng Anh bất kỳ để khai chiến!
                 </div>
               )}
             </div>
@@ -325,7 +346,7 @@ export default function GameScreen({ playerName, vCoins, settings, inventory, on
               autoComplete="off"
               spellCheck="false"
             />
-            <button className="primary-btn" onClick={handleSubmit}>Bắn 🚀</button>
+            <button className="primary-btn" onClick={handleSubmit}>Bắn</button>
           </div>
 
           <div className="items-toolbar" style={{ display: 'flex', justifyContent: 'center', marginTop: '15px' }}>
