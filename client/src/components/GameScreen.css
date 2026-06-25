@@ -8,12 +8,14 @@
   display: flex;
   justify-content: center;
   background: var(--bg-color);
+  overflow-y: auto;
 }
 
 .game-container {
   width: 100%;
   max-width: 1200px;
-  height: 100%;
+  height: auto;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
   padding: 20px;
@@ -123,7 +125,7 @@
 }
 
 .bot-word {
-  font-size: clamp(3rem, 6vw, 5rem);
+  font-size: clamp(2rem, 4vw, 3.5rem);
   font-weight: 900;
   letter-spacing: 4px;
   color: var(--text-color);
