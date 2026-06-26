@@ -1,0 +1,29 @@
+erDiagram
+    USERS ||--o{ FLASHCARDS : "sở hữu (1-N)"
+    USERS ||--o{ INVENTORY : "chứa (1-N)"
+    
+    USERS {
+        string user_id PK "Mã định danh (UUID)"
+        string username "Tên hiển thị"
+        string email "Email người dùng"
+        string password_hash "Mật khẩu mã hóa"
+        int v_coins "Số dư tiền ảo"
+        int highscore "Điểm kỉ lục"
+        datetime created_at "Ngày khởi tạo"
+    }
+
+    FLASHCARDS {
+        string card_id PK "Mã thẻ"
+        string user_id FK "Tên người dùng"
+        string word "Từ vựng tiếng Anh"
+        string meaning "Nghĩa tiếng Việt"
+        string example "Câu ví dụ"
+        datetime last_reviewed "Lần ôn tập cuối"
+    }
+
+    INVENTORY {
+        string record_id PK "Mã bản ghi"
+        string user_id FK "Tên người dùng"
+        string item_id "Mã định danh vật phẩm"
+        int quantity "Số lượng vật phẩm"
+    }

@@ -1,16 +1,33 @@
 import React, { useState } from 'react';
 import './StoreScreen.css';
+import { Inventory } from '../types';
 
-export default function StoreScreen({ vCoins, inventory, onBuy, onBack }) {
-  const items = [
+interface StoreScreenProps {
+  vCoins: number;
+  inventory: Inventory;
+  onBuy: (price: number, newInventory: Inventory) => void;
+  onBack: () => void;
+  isLightMode?: boolean;
+}
+
+interface StoreItem {
+  id: number;
+  name: string;
+  price: number;
+  icon: string;
+  desc: string;
+}
+
+export default function StoreScreen({ vCoins, inventory, onBuy, onBack, isLightMode }: StoreScreenProps) {
+  const items: StoreItem[] = [
     { id: 1, name: 'Kính lúp Gợi ý', price: 50, icon: '🔍', desc: 'Nhờ AI gợi ý 1 từ hợp lệ khi bạn bí.' },
     { id: 2, name: 'Avatar Vip', price: 200, icon: '👑', desc: 'Khung viền vàng chói lóa cho tài khoản.' },
     { id: 3, name: 'Bùa Hồi Sinh', price: 500, icon: '❤️', desc: 'Có thêm 15 giây khi hết giờ.' }
   ];
 
-  const handleBuy = (item) => {
+  const handleBuy = (item: StoreItem) => {
     if (item.id === 2 && inventory.vip) {
-      alert('Bạn đã sở hữu Avatar Vip rồi!');
+      alert('Bạn đã sở hữu Avatar Vip!');
       return;
     }
 

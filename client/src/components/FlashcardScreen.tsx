@@ -1,8 +1,15 @@
 import React, { useState } from 'react';
 import './FlashcardScreen.css';
+import { Flashcard } from '../types';
 
-export default function FlashcardScreen({ flashcards, onBack }) {
-  const [searchTerm, setSearchTerm] = useState('');
+interface FlashcardScreenProps {
+  flashcards: Flashcard[];
+  onBack: () => void;
+  isLightMode?: boolean;
+}
+
+export default function FlashcardScreen({ flashcards, onBack, isLightMode }: FlashcardScreenProps) {
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
   const filteredFlashcards = flashcards ? flashcards.filter(card => 
     card.word.toLowerCase().includes(searchTerm.toLowerCase())

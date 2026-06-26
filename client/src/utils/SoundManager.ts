@@ -1,13 +1,13 @@
 export const SoundManager = {
-  ctx: null,
+  ctx: null as AudioContext | null,
 
   init() {
     if (!this.ctx) {
-      this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+      this.ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
     }
   },
 
-  playTone(freq, type, duration, vol = 0.1) {
+  playTone(freq: number, type: OscillatorType, duration: number, vol: number = 0.1) {
     if (!this.ctx) return;
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
