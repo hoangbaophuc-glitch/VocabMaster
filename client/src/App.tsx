@@ -4,16 +4,17 @@ import LobbyScreen from './components/LobbyScreen'
 import GameScreen from './components/GameScreen'
 import StoreScreen from './components/StoreScreen'
 import FlashcardScreen from './components/FlashcardScreen'
+import { GameSettings, Inventory, Flashcard } from './types'
 
 function App() {
-  const [player, setPlayer] = useState(null)
-  const [currentTab, setCurrentTab] = useState('lobby') // 'lobby', 'game', 'store', 'flashcard'
-  const [vCoins, setVCoins] = useState(200)
-  const [isLightMode, setIsLightMode] = useState(false)
-  const [gameSettings, setGameSettings] = useState({ mode: 'chain', difficulty: 'easy', timeLimit: 15, maxAttempts: 3 })
-  const [inventory, setInventory] = useState({ hint: 0, revive: 0, vip: false })
+  const [player, setPlayer] = useState<string | null>(null)
+  const [currentTab, setCurrentTab] = useState<string>('lobby') // 'lobby', 'game', 'store', 'flashcard'
+  const [vCoins, setVCoins] = useState<number>(200)
+  const [isLightMode, setIsLightMode] = useState<boolean>(false)
+  const [gameSettings, setGameSettings] = useState<GameSettings>({ mode: 'chain', difficulty: 'easy', timeLimit: 15, maxAttempts: 3 })
+  const [inventory, setInventory] = useState<Inventory>({ hint: 0, revive: 0, vip: false })
 
-  const [flashcards, setFlashcards] = useState(() => {
+  const [flashcards, setFlashcards] = useState<Flashcard[]>(() => {
     const saved = localStorage.getItem('vocab_flashcards');
     return saved ? JSON.parse(saved) : [];
   })
@@ -23,8 +24,8 @@ function App() {
     else document.documentElement.classList.remove('light-mode');
   }, [isLightMode]);
 
-  const handleAddFlashcard = (word, meaning) => {
-    setFlashcards(prev => {
+  const handleAddFlashcard = (word: string, meaning: string) => {
+    setFlashcards((prev: Flashcard[]) => {
       if (prev.find(f => f.word === word)) return prev;
       const updated = [{ id: Date.now(), word, meaning }, ...prev];
       localStorage.setItem('vocab_flashcards', JSON.stringify(updated));
@@ -54,7 +55,7 @@ function App() {
         return (
           <GameScreen 
             isLightMode={isLightMode}
-            playerName={player} 
+            playerName={player!} 
             vCoins={vCoins}
             settings={gameSettings}
             inventory={inventory}

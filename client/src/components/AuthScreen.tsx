@@ -2,8 +2,13 @@ import React, { useState } from 'react';
 import './AuthScreen.css';
 import wmLogo from '../asset/icons/wm.svg';
 
-export default function AuthScreen({ onLogin, isLightMode }) {
-  const [username, setUsername] = useState('');
+interface AuthScreenProps {
+  onLogin: (name: string) => void;
+  isLightMode: boolean;
+}
+
+export default function AuthScreen({ onLogin, isLightMode }: AuthScreenProps) {
+  const [username, setUsername] = useState<string>('');
 
   const handleStart = () => {
     if (username.trim()) {

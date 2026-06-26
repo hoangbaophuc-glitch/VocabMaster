@@ -1,25 +1,35 @@
 import React from 'react';
 import './LobbyScreen.css';
 import { SoundManager } from '../utils/SoundManager';
+import { GameSettings } from '../types';
 
-export default function LobbyScreen({ settings, onSettingsChange, onStart, onOpenStore, onOpenFlashcard }) {
+interface LobbyScreenProps {
+  settings: GameSettings;
+  onSettingsChange: (settings: GameSettings) => void;
+  onStart: () => void;
+  onOpenStore: () => void;
+  onOpenFlashcard: () => void;
+  isLightMode?: boolean;
+}
+
+export default function LobbyScreen({ settings, onSettingsChange, onStart, onOpenStore, onOpenFlashcard, isLightMode }: LobbyScreenProps) {
   
   const handleStart = () => {
     SoundManager.success();
     onStart();
   };
 
-  const handleModeChange = (mode) => {
+  const handleModeChange = (mode: string) => {
     SoundManager.typeKey();
     onSettingsChange({ ...settings, mode });
   };
 
-  const handleDifficultyChange = (difficulty) => {
+  const handleDifficultyChange = (difficulty: string) => {
     SoundManager.typeKey();
     onSettingsChange({ ...settings, difficulty });
   };
 
-  const handleTimeSliderChange = (e) => {
+  const handleTimeSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const timeLimit = parseInt(e.target.value, 10);
     SoundManager.typeKey();
     onSettingsChange({ ...settings, timeLimit });
@@ -29,7 +39,7 @@ export default function LobbyScreen({ settings, onSettingsChange, onStart, onOpe
   const currentHpIndex = hpValues.indexOf(settings.maxAttempts) !== -1 ? hpValues.indexOf(settings.maxAttempts) : 1;
 
   // Xử lý thay đổi thanh trượt HP dựa vào index
-  const handleHpSliderChange = (e) => {
+  const handleHpSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const index = parseInt(e.target.value, 10);
     SoundManager.typeKey();
     onSettingsChange({ ...settings, maxAttempts: hpValues[index] });

@@ -1,23 +1,37 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './GameScreen.css';
 import { SoundManager } from '../utils/SoundManager';
+import { GameSettings, Inventory } from '../types';
 
-export default function GameScreen({ playerName, vCoins, settings, inventory, onUpdateInventory, onAddCoins, onAddFlashcard, onGoLobby, onOpenStore }) {
-  const [currentWord, setCurrentWord] = useState('');
-  const [botWord, setBotWord] = useState('');
-  const [botDef, setBotDef] = useState('');
-  const [score, setScore] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(settings.timeLimit);
-  const [errorMsg, setErrorMsg] = useState('');
-  const [isError, setIsError] = useState(false);
-  const [history, setHistory] = useState([]);
-  const [hasStarted, setHasStarted] = useState(false);
-  const [secretWord, setSecretWord] = useState('');
-  const [wrongCount, setWrongCount] = useState(0);
+interface GameScreenProps {
+  playerName: string;
+  vCoins: number;
+  settings: GameSettings;
+  inventory: Inventory;
+  onUpdateInventory: (inv: Inventory) => void;
+  onAddCoins: (amount: number) => void;
+  onAddFlashcard: (word: string, meaning: string) => void;
+  onGoLobby: () => void;
+  onOpenStore: () => void;
+  isLightMode?: boolean;
+}
+
+export default function GameScreen({ playerName, vCoins, settings, inventory, onUpdateInventory, onAddCoins, onAddFlashcard, onGoLobby, onOpenStore, isLightMode }: GameScreenProps) {
+  const [currentWord, setCurrentWord] = useState<string>('');
+  const [botWord, setBotWord] = useState<string>('');
+  const [botDef, setBotDef] = useState<any>('');
+  const [score, setScore] = useState<number>(0);
+  const [timeLeft, setTimeLeft] = useState<number>(settings.timeLimit);
+  const [errorMsg, setErrorMsg] = useState<string>('');
+  const [isError, setIsError] = useState<boolean>(false);
+  const [history, setHistory] = useState<string[]>([]);
+  const [hasStarted, setHasStarted] = useState<boolean>(false);
+  const [secretWord, setSecretWord] = useState<string>('');
+  const [wrongCount, setWrongCount] = useState<number>(0);
   
-  const timerRef = useRef(null);
+  const timerRef = useRef<number | undefined>(undefined);
 
-  function showError(msg) {
+  function showError(msg: string) {
     setErrorMsg(msg);
     setIsError(true);
     setTimeout(() => setIsError(false), 500);
@@ -79,8 +93,8 @@ export default function GameScreen({ playerName, vCoins, settings, inventory, on
 
   // AUTO-FOCUS KHI GÕ PHÍM
   useEffect(() => {
-    const handleGlobalKeyDown = (e) => {
-      if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if (document.activeElement?.tagName === 'INPUT' || document.activeElement?.tagName === 'TEXTAREA') return;
       if (e.ctrlKey || e.metaKey || e.altKey) return;
       
       if (e.key.length === 1 || e.key === 'Backspace') {
